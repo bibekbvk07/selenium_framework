@@ -4,10 +4,9 @@ Feature: All test cases for positive & negative scenarios
   Background:
     Given User is in "Suacedemo" homepage "https://www.saucedemo.com/"
 
-
   @Form
   Scenario Outline: Check username
-    Then find recrument
+    Then find recruitment
     Then Select "<Job Title>" as "Job Title"
     Then Select "<Vacancy>" as "Vacancy"
 
@@ -19,8 +18,8 @@ Feature: All test cases for positive & negative scenarios
 
   @validLogin @Regress @Login
   Scenario: Login with positive/correct credentials
-    When User enters correct username "standard_user"
-    And User enters correct password "secret_sauce"
+    When User enters username "standard_user"
+    And User enters password "secret_sauce"
     Then User should be able to login
 
   @datatabletest
@@ -28,6 +27,7 @@ Feature: All test cases for positive & negative scenarios
     When User enters correct credentials
       |standard_user|secret_sauce|
     Then User should be able to login
+
 
   @InvalidLogin @Login
   Scenario Outline: Login with invalid credentials

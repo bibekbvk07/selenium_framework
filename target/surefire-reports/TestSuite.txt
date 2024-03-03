@@ -1,0 +1,10 @@
+-------------------------------------------------------------------------------
+Test set: TestSuite
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 10.11 s <<< FAILURE! -- in TestSuite
+org.example.runner.CucumberRunner.runScenario["User opens 'My Info' in a new tab and switches to the new tab.", "Login scenario for OrangeHRM"](1) -- Time elapsed: 6.672 s <<< FAILURE!
+java.lang.AssertionError: Page not available
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.example.stepdefinations.OrangeStepDef.userShouldBeInPersonalDetailsTab(OrangeStepDef.java:172)
+	at ✽.User should be in Personal Details tab(file:///Users/bibekamatya/ITSutra/Framework/selenium_framework/src/test/resources/features/orange.feature:42)
+

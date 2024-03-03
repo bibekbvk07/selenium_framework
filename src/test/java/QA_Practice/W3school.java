@@ -1,10 +1,7 @@
 package QA_Practice;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
@@ -16,13 +13,12 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class W3school {
     WebDriver webDriver;
+    Actions actions;
 
     @BeforeTest
     public void beforetest(){
@@ -36,6 +32,7 @@ public class W3school {
         ops.setExperimentalOption("excludeSwitches", Collections.singletonList("enable-automation"));
         webDriver = new ChromeDriver(ops);
         webDriver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
+        actions = new Actions(webDriver);
         webDriver.get("https://www.w3schools.com/");
     }
 
@@ -44,12 +41,16 @@ public class W3school {
      */
     @Test
     public void checkTitle(){
-        String title = webDriver.getTitle();
-        System.out.println("The title is: "+ title);
-        if (title.equals("W3Schools Online Web Tutorials")){
-            Assert.assertTrue(true);
-        }else{
-            Assert.fail("Incorrect Title");
+        try{
+            String title = webDriver.getTitle();
+            System.out.println("The title is: "+ title);
+            if (title.equals("W3Schools Online Web Tutorials")){
+                Assert.assertTrue(true);
+            }else{
+                Assert.fail("Incorrect Title");
+            }
+        }catch(Exception e){
+            e.getStackTrace();
         }
     }
     @Test
@@ -76,7 +77,6 @@ public class W3school {
     @Test
     public void mouseHoverTest(){
         try{
-            Actions actions = new Actions(webDriver);
             List<WebElement> elements = webDriver.findElements(By.xpath("//div[@id= 'subtopnav']/a"));
 
             List<String> topics = new ArrayList<>();
@@ -105,15 +105,51 @@ public class W3school {
         }
     }
     @Test
-    public void mouseHoverTest1(){
+    public void new_tab_test(){
         try{
-            Actions actions = new Actions(webDriver);
+            WebElement java = webDriver.findElement(By.xpath("//div[@id='subtopnav']/a[6]"));
+            actions.moveToElement(java).build().perform();
+            Thread.sleep(500);
+            java.click();
+
+            String javaWindowId = webDriver.getWindowHandle();
+            System.out.println(javaWindowId);
+
+            WebElement scroll = webDriver.findElement(By.xpath("//div[@id='leftmenuinnerinner']/h2[text()='Java Methods']"));
+            ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true)", scroll);
+
+            WebElement javaMethods = webDriver.findElement(By.xpath("//a[text()='Java Methods']"));
+            javaMethods.sendKeys(Keys.chord(Keys.COMMAND, Keys.ENTER));
+            Thread.sleep(500);
+
+            List<String> handles = new ArrayList<>(webDriver.getWindowHandles());
+            webDriver.switchTo().window(handles.get(1));
+            Thread.sleep(3000);
+
+            String javaMethodsId = webDriver.getWindowHandle();
+            System.out.println(javaMethodsId);
+
+            String url = webDriver.getCurrentUrl();
+            if (url.equals("https://www.w3schools.com/java/java_methods.asp")){
+                Assert.assertTrue(true);
+            }else{
+                Assert.fail("Wrong tab");
+            }
+        }catch (Exception e){
+            e.getStackTrace();
+        }
+    }
+    @Test
+    public void mouseHoverAndNewTabTest(){
+        try{
             WebElement element = webDriver.findElement(By.id("navbtn_exercises"));
             actions.moveToElement(element).build().perform();
             Thread.sleep(1000);
             element.click();
+
             webDriver.findElement(By.xpath("//div[@data-name='java']//a[normalize-space(text())='Exercise']")).click();
             String currentWindowID = webDriver.getWindowHandle();
+            System.out.println(currentWindowID);
             WebElement newWindow = webDriver.findElement(By.xpath("//a[text()='Start Java Exercises ❯']"));
             newWindow.click();
 
@@ -124,9 +160,11 @@ public class W3school {
             for (String windowId : webDriver.getWindowHandles()) {
                 if (!currentWindowID.equals(windowId)){
                     webDriver.switchTo().window(windowId);
+                    System.out.println(windowId);
                     break;
                 }
             }
+
             String urlOfNewWindow = webDriver.getCurrentUrl();
             System.out.println(urlOfNewWindow);
 
@@ -135,7 +173,6 @@ public class W3school {
             }else{
                 Assert.fail("Different URL");
             }
-//            String [] ans = new String[]{"System", "out","println"};
             String [] ans = {"System", "out","println"};
             WebElement value;
             for (int i = 1; i <= 3; i++){
@@ -150,18 +187,60 @@ public class W3school {
     }
 
     @Test
-    public void scrollTest(){
+    public void switch_between_tabs(){
         try{
-            Actions actions = new Actions(webDriver);
-            WebElement element = webDriver.findElement(By.xpath("//h2[text()='How To Section']"));
-            ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true)", element);
-            Thread.sleep(3000);
+            WebElement java = webDriver.findElement(By.xpath("//div[@id='subtopnav']/a[6]"));
+            actions.moveToElement(java).build().perform();
+            Thread.sleep(500); // wait to see the hover effect
+            java.click();
 
-        }catch (Exception e){
+            ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true)", webDriver.findElement(By.xpath("//h2[text()='Java Methods']")));
+            Thread.sleep(500);
+
+            WebElement javaMethods = webDriver.findElement(By.xpath("//a[text()='Java Methods']"));
+            WebElement javaMethodParam = webDriver.findElement(By.xpath("//a[text()='Java Method Parameters']"));
+            javaMethods.sendKeys(Keys.chord(Keys.COMMAND, Keys.ENTER));
+            javaMethodParam.sendKeys(Keys.chord(Keys.COMMAND, Keys.ENTER));
+
+            /**
+             Set<String> windowHandles = webDriver.getWindowHandles();
+             System.out.println(windowHandles);
+
+             Iterator<String> handle = windowHandles.iterator();
+             String parentWindow = handle.next();
+             String child1 = handle.next();
+             String child3 = handle.next();
+
+             //switching the window handles
+             webDriver.switchTo().window(child3);
+             System.out.println(webDriver.getWindowHandle());
+             Thread.sleep(2000);
+             webDriver.switchTo().window(parentWindow);
+             System.out.println(webDriver.getWindowHandle());
+             */
+
+            List<String> windowHandles = new ArrayList<>(webDriver.getWindowHandles());
+            System.out.println(windowHandles);
+            for (String handle: windowHandles) {
+                webDriver.switchTo().window(handle);
+                Thread.sleep(2000);
+                System.out.println(webDriver.getWindowHandle());
+            }
+        }catch(Exception e){
             e.getStackTrace();
         }
     }
 
+    @Test
+    public void scrollTest(){
+        try{
+            WebElement element = webDriver.findElement(By.xpath("//h2[text()='How To Section']"));
+            ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true)", element);
+            Thread.sleep(1000);
+        }catch (Exception e){
+            e.getStackTrace();
+        }
+    }
     @AfterTest
     public void aftertest(){
         webDriver.quit();

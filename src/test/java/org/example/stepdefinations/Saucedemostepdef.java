@@ -17,33 +17,33 @@ import java.util.concurrent.TimeUnit;
 public class Saucedemostepdef {
     WebDriver driver;
 
-    @Given("User initilize the browser")
-    public void user_initilize_the_browser() {
-//        WebDriverManager.chromedriver().clearDriverCache().setup();
-        CommonFunctions.webDriverManager();
-        driver = new ChromeDriver();
-        driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
-        driver.get("https://www.saucedemo.com/");
+    @Given("User initialize the browser")
+    public void user_initialize_the_browser() {
+        CommonStepDefination.browserClass.getWebDriver().get("https://www.saucedemo.com/");
     }
 
     @When("User enters username {string}")
     public void user_enters_username(String username) {
-        driver.findElement(By.id("user-name")).sendKeys("standard_user");
+        CommonStepDefination.browserClass.getWebDriver().findElement(By.id("user-name")).sendKeys("standard_user");
     }
     @When("User enters password {string}")
     public void user_enters_password(String password) {
-        driver.findElement(By.id("password")).sendKeys("secret_sauce");
+        CommonStepDefination.browserClass.getWebDriver().findElement(By.id("password")).sendKeys("secret_sauce");
 
-        driver.findElement(By.id("login-button")).click();
     }
-
 
     @Then("User should be able to login")
     public void user_should_be_able_to_login() {
-        String title = driver.getTitle();
+        CommonStepDefination.browserClass.getWebDriver().findElement(By.id("login-button")).click();
+        String title = CommonStepDefination.browserClass.getWebDriver().getTitle();
         System.out.println("The title of the website is: "+title);
-        driver.quit();
+        CommonStepDefination.browserClass.getWebDriver().quit();
     }
+    @Given("User is in {string} homepage {string}")
+    public void userIsInHomepage(String site, String url) {
+        CommonStepDefination.browserClass.getWebDriver().get(url);
+    }
+
 
     @Given("HR searching for {string} for post of {string} {string}")
     public void hr_searching_for_for_post_of(String job_title, String total, String vacancy) {
@@ -57,17 +57,36 @@ public class Saucedemostepdef {
         }
     }
 
-    @When("User enterss corrects credentials")
-    public void user_enterss_corrects_credentials(DataTable dataTable) {
+    @When("User enters correct credentials")
+    public void user_enters_correct_credentials(DataTable dataTable) {
         List<List<String>> data = dataTable.asLists(String.class);
         for(List<String> columns: data) {
+            CommonStepDefination.browserClass.getWebDriver().findElement(By.cssSelector("input[id='user-name']")).sendKeys(columns.get(0));
+            CommonStepDefination.browserClass.getWebDriver().findElement(By.cssSelector("input[id='password']")).sendKeys(columns.get(1));
             System.out.println(columns.get(0));
             System.out.println(columns.get(1));
         }
     }
 
-    @Then("User shoulds be ables to login")
-    public void user_shoulds_be_ables_to_login() {
-        System.out.println("login successful");
+    @Then("find recruitment")
+    public void findRecruitment() {
+        CommonStepDefination.browserClass.getWebDriver().findElement(By.xpath("//span[text()='Recruitment']")).click();
+    }
+    @When("User enters username as {string} and password as {string}")
+    public void userEntersUsernameAsAndPasswordAs(String username, String password) {
+        CommonStepDefination.browserClass.getWebDriver().findElement(By.cssSelector("input[id='user-name']")).sendKeys(username);
+        CommonStepDefination.browserClass.getWebDriver().findElement(By.cssSelector("input[id='password']")).sendKeys(password);
+    }
+
+    @Then("User should be able to see error message {string}")
+    public void userShouldBeAbleToSeeErrorMessage(String errormessage) {
+        CommonStepDefination.browserClass.getWebDriver().findElement(By.cssSelector("input[id='login-button']")).click();
+        String errorMsg = CommonStepDefination.browserClass.getWebDriver().findElement(By.xpath("//div[contains(@class,'error-message-container')]/h3[contains(text(),'"+errormessage+"')]")).getText();
+        if (errorMsg.contains(errormessage)){
+            Assert.assertTrue(true);
+        }
+        else {
+            Assert.fail("Text doesn't contains locked out user");
+        }
     }
 }

@@ -2,7 +2,7 @@ Feature: All test cases for positive & negative scenarios
 
   @simplest
   Scenario: Validate positive login flow
-    Given User initilize the browser
+    Given User initialize the browser
     When User enters username "standard_user"
     And User enters password "secret_sauce"
     Then User should be able to login
@@ -11,7 +11,6 @@ Feature: All test cases for positive & negative scenarios
   Scenario Outline: Demo scenario outline
     Given HR searching for "<Job Title>" for post of "Two" "<Vacancy>"
 
-
     Examples:
       |Job Title| Vacancy|
       |QA Lead|SDET|
@@ -19,6 +18,7 @@ Feature: All test cases for positive & negative scenarios
 
   @dataexample
   Scenario: Login with positive/correct credentials
-    When User enterss corrects credentials
+    Given User is in "Suacedemo" homepage "https://www.saucedemo.com/"
+    When User enters correct credentials
       |standard_user|secret_sauce|
-    Then User shoulds be ables to login
+    Then User should be able to login

@@ -1,10 +1,7 @@
 package QA_Practice;
 
 import org.example.utilities.CommonFunctions;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -15,6 +12,8 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.time.Duration;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class ElementsTest {
@@ -25,6 +24,23 @@ public class ElementsTest {
         webDriver = new ChromeDriver(CommonFunctions.getChromeOptions());
         webDriver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
     }
+    /**
+     This test method, textBoxTest, is designed to validate the functionality of the text box feature on the
+     specified webpage "https://demoqa.com/text-box". The test inputs sample data into various text fields,
+     including username, email, current address, and permanent address. It then submits the form and checks
+     for any exceptions during the execution.
+     @Test_Steps:
+
+     Navigate to the webpage "https://demoqa.com/text-box".
+     Enter "Hello World" into the username input field.
+     Enter "hello@gmail.com" into the email input field.
+     Enter "123 Warren St \nMankato, MN, 56001" into both current and permanent address text areas.
+     Click the submit button.
+     @throws Exception If any unexpected issues occur during the execution of the test, an exception message
+     Note: This test is meant to be a basic validation of the text box functionality and does not include
+     in-depth validations or assertions. For a more comprehensive test suite, additional scenarios and assertions
+     can be added.
+     */
     @Test
     public void textBoxTest(){
         try{
@@ -53,7 +69,6 @@ public class ElementsTest {
                 checkbox = webDriver.findElement(By.xpath("//li/ol/li["+i+"]//span[@class='rct-checkbox']"));
                 checkbox.click();
             }
-
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
@@ -130,6 +145,41 @@ public class ElementsTest {
             wait.until(ExpectedConditions.elementToBeClickable(button));
             Thread.sleep(3000);
             button.click();
+        }catch (Exception e){
+            e.getStackTrace();
+        }
+    }
+
+    @Test
+    public void orm_new_tab(){
+        try{
+            webDriver.get("https://opensource-demo.orangehrmlive.com/web/index.php/auth/login");
+            Actions actions = new Actions(webDriver);
+            webDriver.findElement(By.xpath("//input[@placeholder='Username']")).sendKeys("Admin");
+            webDriver.findElement(By.xpath("//input[@placeholder='Password']")).sendKeys("admin123");
+            webDriver.findElement(By.xpath("//button[@type='submit']")).click();
+
+            WebElement myInfo = webDriver.findElement(By.xpath("//a[contains(@href, '/viewMyDetails')]"));
+            actions.moveToElement(myInfo).build().perform();
+            Thread.sleep(2000);
+            myInfo.sendKeys(Keys.chord(Keys.COMMAND, Keys.ENTER));
+//            myInfo.click();
+            Thread.sleep(4000);
+
+            Set<String> windowHandles = webDriver.getWindowHandles();
+            Iterator<String> iterator = windowHandles.iterator();
+            String parentHandle = iterator.next();
+            String childHandle = iterator.next();
+            webDriver.switchTo().window(childHandle);
+
+            System.out.println("Parent Handle: "+ parentHandle);
+            System.out.println("Child Handle: "+ childHandle);
+            WebElement element = webDriver.findElement(By.xpath("//input[@placeholder='First Name']"));
+
+            element.click();
+            element.clear();
+            element.sendKeys("Bibek");
+            Thread.sleep(3000);
         }catch (Exception e){
             e.getStackTrace();
         }

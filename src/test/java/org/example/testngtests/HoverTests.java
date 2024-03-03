@@ -85,7 +85,7 @@ public class HoverTests {
             if (targetAttribute != null && targetAttribute.equals("_blank")){
                 Assert.assertTrue(true);
             }else{
-                Assert.fail("You1st link has no target attribute (broken link)! ");
+                Assert.fail("You1st link has no target attribute! ");
             }
             youFirst.click();
             Thread.sleep(4000);
@@ -97,7 +97,7 @@ public class HoverTests {
         // Close the browser
         webDriver.quit();
     }
-    @Test(priority = 3)
+    @Test
     public void open_in_new_link_test(){
         try{
             webDriver.get("https://www.tutorialspoint.com/about/about_careers.htm");
