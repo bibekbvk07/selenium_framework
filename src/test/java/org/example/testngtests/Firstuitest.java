@@ -1,6 +1,7 @@
 package org.example.testngtests;
 
 import org.example.utilities.CommonFunctions;
+import org.json.simple.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -15,6 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+
 public class Firstuitest {
     WebDriver driver;
 
@@ -24,7 +28,7 @@ public class Firstuitest {
         driver = new ChromeDriver(CommonFunctions.getChromeOptions());
         //implicit wait
         driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
-        driver.get("https://www.saucedemo.com/");
+//        driver.get("https://www.saucedemo.com/");
     }
 
     @Test
@@ -180,6 +184,8 @@ public class Firstuitest {
         Assert.assertEquals((itemTotal+totalTax), Total, "Total Price doesn't match");
 
     }
+
+
 
     @AfterTest
     public void aftertest() {

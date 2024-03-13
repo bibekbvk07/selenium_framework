@@ -1,30 +1,50 @@
-Feature: Test cases for the Time functionality
+Feature: Time scenario for OrangeHRM site
 
-  Rule: Common rule for the test cases below
+  Scenario: User must login to conduct these test cases
+    Given User launches URL "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login"
+    And User enters username "Admin"
+    And User enters password "admin123"
+    And User clicks on login button
+    And User is on the dashboard page
+    And User clicks on time link
+
+  Rule: Common rule for these 4 test cases
     Background:
-      Given User launches URL "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login"
-      When Users enters username "Admin"
-      And Users enters password "admin123"
-      And User clicks on Login
-      Then User should be able navigate Homepage
+      Given User hovers and clicks on attendance
 
-        @HRM_Time_NavigateTo_PunchIn
-        Scenario: Positive navigation to Punch In page
-          Given User clicks on Time link
-          And User navigates to attendance tab and clicks on attendance dropdown
-          And User clicks on PunchIn-Out
-          Then User should be on Punch In page
+    @time_attendance_myRecords
+    Scenario: Positive navigation to the My Record page
+      When User clicks on my records
+      Then My record page appears
 
-          @HRM_Time_NavTabItems_Click
-          Scenario: Positive clicks on all the navbar tab items
-            Given User clicks on Time link
-            And User clicks on all the navbar tab items
-            Then User should be able to see nav tab items clicked
+    @time_attendance_punchInOut
+    Scenario: Positive navigation to the punch in/out page
+      When User clicks on punch in-out
+      Then Punch in-out page appears
 
-          @HRM_Time_PunchIn_Test
-          Scenario: Positive punch in test
-            Given User clicks on Time link
-            And User navigates to attendance tab and clicks on attendance dropdown
-            And User clicks on PunchIn-Out
-            And User checks the status of punch-in and if punched in, user will punch out before punching in
-            Then User should be able to punch in
+    @time_attendance_employeeRecords
+    Scenario: Positive navigation to the Employee Records page
+      When User clicks on employee records
+      Then Employee records page appears
+
+    @time_attendance_employeeRecords_list
+    Scenario: Positive navigation to the Employee Records page
+      Given Employee records page appears
+      Then Employee should be able to see the list
+
+    @time_attendance_configuration
+    Scenario: Positive navigation to the Attendance configuration page
+      When User clicks on configuration
+      Then Configuration page appears
+
+    @time_attendance_configuration_uncheck
+    Scenario: User uncheck all the checkbox options
+      Given Configuration page appears
+      When User unchecks all the option
+      And User clicks on save
+      Then User should be able to see the changes
+
+
+
+
+

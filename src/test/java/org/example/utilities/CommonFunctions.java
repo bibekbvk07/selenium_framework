@@ -18,9 +18,9 @@ public class CommonFunctions {
      private static ChromeOptions ops;
 
     public static void webDriverManager(){
-//        WebDriverManager.chromedriver().clearDriverCache().driverVersion("").setup();
-        String rootpath = System.getProperty("user.dir");
-        System.setProperty("webdriver.chrome.driver", rootpath + "/src/test/resources/webdriver/chromedriver");
+        WebDriverManager.chromedriver().clearDriverCache().driverVersion("").setup();
+//        String rootpath = System.getProperty("user.dir");
+//        System.setProperty("webdriver.chrome.driver", rootpath + "/src/test/resources/webdriver/chromedriver");
     }
     public static void invoke(){
         try {
