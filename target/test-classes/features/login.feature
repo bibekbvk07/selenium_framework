@@ -29,7 +29,7 @@ Feature: Login scenario for OrangeHRM site
     And User clicks on login button
     Then User gets an invalid login message
 
-  @login
+  @login@smoke
   Scenario: Positive credential login
     Given User launches URL "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login"
     And User enters username "Admin"

@@ -13,6 +13,8 @@ import java.util.Map;
 
 public class TimeStepDefinition {
 
+    private boolean isChecked;
+
     @And("User clicks on time link")
     public void user_clicks_on_time_link() {
         CommonStepDefinition.browserClass.getWebDriver().findElement(By.xpath("//a[contains(@href, '/time/viewTimeModule')]")).click();
@@ -45,7 +47,7 @@ public class TimeStepDefinition {
             Assert.assertTrue(true);
             System.out.println("Record page header: "+ myRecordsPage.getText());
         }else{
-            Assert.fail("My Records page not found!");
+            Assert.fail("My Records page was not found!");
         }
     }
 
@@ -67,7 +69,7 @@ public class TimeStepDefinition {
             Assert.assertTrue(true);
             System.out.println(punchInPage.getText());
         }else{
-            Assert.fail("Punch In/Out page not found!");
+            Assert.fail("Punch In/Out page was not found!");
         }
     }
 
@@ -91,7 +93,7 @@ public class TimeStepDefinition {
             Assert.assertTrue(true);
             System.out.println(employeeRecordsPage.getText());
         }else{
-            Assert.fail("Employee Records page not found!");
+            Assert.fail("Employee Records page was not found!");
         }
     }
 
@@ -99,34 +101,39 @@ public class TimeStepDefinition {
     public void employeeShouldBeAbleToSeeTheList() {
         Map<String, Double> employeeAttendanceRecords = new HashMap<>();
         WebElement stringCount = CommonStepDefinition.browserClass.getWebDriver().findElement(By.xpath("//span[@class='oxd-text oxd-text--span']"));
+        String extractDigit = stringCount.getText();
 
-        // Extracting digits only inside parenthesis
-        String records = GlobalFile.extractDigitsInParentheses(stringCount.getText());
+        // Extracting digit with the parenthesis
+        int startIndex = extractDigit.indexOf('(');
+        int endIndex = extractDigit.indexOf(')');
 
-        int count;
-        //If stringCount.getText() is an empty string,
-        if (records.isEmpty()){
-            count = 0;
-        }else{
-         count = Integer.parseInt(records);
-        }
-        System.out.println(count);
+        if (startIndex != -1 && endIndex != -1 && endIndex > startIndex){
+            int count = Integer.parseInt(extractDigit.substring(startIndex+1, endIndex));
+            System.out.println("Total Records: "+ count);
 
-        //((//div[@class='oxd-table-body']/div/div)[3]/div)[2]
-        int index = 0;
-        if (count > 0){
-            for (int i = 1; i <= count; i++){
-                index++;
-                if (index >50){
-                    index = 0;
+            if (count > 0){
+                int index = 1;
+                int pagination = 1;
+                for (int i = 1; i <= count; i++){
+                    if (index > 50){
+                        // reset the index counter
+                        index = 1;
+                        // pagination increment
+                        pagination++;
+                        CommonStepDefinition.browserClass.getWebDriver().findElement(By.xpath("(//ul[@class='oxd-pagination__ul']/li)["+pagination+"]")).click();
+                    }
+                    String name = CommonStepDefinition.browserClass.getWebDriver().findElement(By.xpath("((//div[@class='oxd-table-body']/div/div)["+index+"]/div)[1]")).getText();
+                    String stringHours= CommonStepDefinition.browserClass.getWebDriver().findElement(By.xpath("((//div[@class='oxd-table-body']/div/div)["+index+"]/div)[2]")).getText();
+                    employeeAttendanceRecords.put(name, Double.parseDouble(stringHours));
+                    index++;
                 }
-                String name = CommonStepDefinition.browserClass.getWebDriver().findElement(By.xpath("((//div[@class='oxd-table-body']/div/div)["+i+"]/div)[1]")).getText();
-                String stringHours= CommonStepDefinition.browserClass.getWebDriver().findElement(By.xpath("((//div[@class='oxd-table-body']/div/div)["+i+"]/div)[2]")).getText();
-                employeeAttendanceRecords.put(name, Double.parseDouble(stringHours));
+            }else{
+               Assert.fail("No records found!");
             }
         }else{
-            System.out.println("No records found!");
+            System.out.println("No digits inside parentheses found.");
         }
+
         for (Map.Entry<String, Double> entry: employeeAttendanceRecords.entrySet()) {
             System.out.print(entry.getKey()+ " "+ entry.getValue()+ "\n");
         }
@@ -161,14 +168,11 @@ public class TimeStepDefinition {
         List<WebElement> configurationList = CommonStepDefinition.browserClass.getWebDriver().findElements(By.xpath("((//div[@class='oxd-form-row']/div/div)/div)"));
 
         for (WebElement element: configurationList) {
-            GlobalFile.isChecked = element.isSelected();
+            isChecked = element.isSelected();
 
-            // If it's not selected, click on it to select it
-            if (!GlobalFile.isChecked){
+            // unchecks all the selected options
+            if (isChecked){
                 element.click();
-            } else{
-                // If the checkbox is already checked
-                System.out.println("Checkbox is already checked: ");
             }
         }
     }
@@ -180,9 +184,6 @@ public class TimeStepDefinition {
 
     @Then("User should be able to see the changes")
     public void userShouldBeAbleToSeeTheChanges() {
-        if (!GlobalFile.isChecked){
-            System.out.println("changes made!");
-        }
+        Assert.assertFalse(isChecked, "Changes not made!");
     }
-
 }

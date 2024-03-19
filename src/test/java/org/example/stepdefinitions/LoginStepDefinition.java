@@ -2,6 +2,7 @@ package org.example.stepdefinitions;
 
 import io.cucumber.java.en.*;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 
@@ -134,5 +135,4 @@ public class LoginStepDefinition {
     public void userClicksOnLogout() {
         CommonStepDefinition.browserClass.getWebDriver().findElement(By.xpath("//a[contains(@href, '/logout')]")).click();
     }
-
 }

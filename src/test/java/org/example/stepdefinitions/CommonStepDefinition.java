@@ -4,11 +4,12 @@ import io.cucumber.java.*;
 import org.example.testngtests.GlobalFields;
 import org.example.utilities.SingletonBrowserClass;
 import org.json.simple.JSONObject;
+import org.openqa.selenium.JavascriptExecutor;
 
 import static io.restassured.RestAssured.given;
 
 public class CommonStepDefinition {
-    public static SingletonBrowserClass browserClass;
+    protected static SingletonBrowserClass browserClass;
 
     /**
      * Setup method to initialize the browser instance before all test methods.
@@ -16,6 +17,7 @@ public class CommonStepDefinition {
     @BeforeAll
     public static void setup(){
         browserClass = SingletonBrowserClass.getSingleBrowserInstance();
+
         JSONObject credential = new JSONObject();
         credential.put("username", "admin");
         credential.put("password", "password123");

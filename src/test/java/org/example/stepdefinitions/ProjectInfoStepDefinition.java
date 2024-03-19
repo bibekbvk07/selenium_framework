@@ -53,7 +53,7 @@ public class ProjectInfoStepDefinition {
 
     @And("User clicks on save button")
     public void userClicksOnSaveButton() {
-        CommonStepDefinition.browserClass.getWebDriver().findElement(By.xpath("//div[@class='oxd-form-actions']/button[@type='submit']")).click();
+        CommonStepDefinition.browserClass.getWebDriver().findElement(By.xpath("//button[@type='submit']")).click();
     }
 
     @Then("User should be able to add customers")

@@ -20,7 +20,7 @@ Feature: Project customer scenario for OrangeHRM site
     @projectCustomer_add
     Scenario: User can successfully add customers
       When User clicks on add button
-      And User enters name "Taylor Corp1"
+      And User enters name "Amazon Corp"
       And User type description "Join a great team with career growth opportunities"
       And User clicks on save button
       Then User should be able to add customers
@@ -28,7 +28,7 @@ Feature: Project customer scenario for OrangeHRM site
     @projectCustomer_duplicate_name
     Scenario: User can't add duplicate names
       When User clicks on add button
-      And User enters name "Taylor Corp"
+      And User enters name "Amazon Corp"
       Then User should see error message
 
 #    @projectCustomer_delete
