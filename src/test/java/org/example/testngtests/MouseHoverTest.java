@@ -164,7 +164,7 @@ public class MouseHoverTest {
             if (targetAttribute != null && targetAttribute.equals("_blank")){
                 Assert.assertTrue(true);
             }else{
-                Assert.fail("Link Our Program has no attribute _blank");
+                Assert.fail("Link to Our Program has no attribute _blank");
             }
             homeProgram.click();
             Thread.sleep(4000);
